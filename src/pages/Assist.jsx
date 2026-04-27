@@ -59,9 +59,104 @@ export default function Assist({ goHome }) {
         {available} printers/scanners available right now
       </div>
 
-      {/* Campus Map */}
+      {/* Campus Illustration + Map */}
       <p className="section-title">Campus Location</p>
       <div className="campus-map-wrapper">
+
+        {/* Animated campus scene */}
+        <div className="campus-scene" aria-label="Francis Xavier Engineering College illustration">
+
+          {/* Sky & clouds */}
+          <div className="campus-sky">
+            <div className="cloud cloud-1" />
+            <div className="cloud cloud-2" />
+            <div className="cloud cloud-3" />
+            {/* Birds */}
+            <div className="bird bird-1">〜</div>
+            <div className="bird bird-2">〜</div>
+            <div className="bird bird-3">〜</div>
+            {/* Sun */}
+            <div className="campus-sun" />
+          </div>
+
+          {/* Main building */}
+          <div className="campus-ground">
+
+            {/* Flag pole */}
+            <div className="flag-pole">
+              <div className="flag" />
+            </div>
+
+            {/* College name sign */}
+            <div className="college-sign">FXEC</div>
+
+            {/* Main block */}
+            <div className="building main-building">
+              <div className="building-roof" />
+              <div className="building-body">
+                {/* Windows row 1 */}
+                <div className="win-row">
+                  {[0,1,2,3,4].map(i => <div key={i} className={`window win-${i%3}`} />)}
+                </div>
+                {/* Windows row 2 */}
+                <div className="win-row">
+                  {[0,1,2,3,4].map(i => <div key={i} className={`window win-${(i+1)%3}`} />)}
+                </div>
+                {/* Gate */}
+                <div className="gate">
+                  <div className="gate-arch" />
+                </div>
+              </div>
+            </div>
+
+            {/* Left wing */}
+            <div className="building wing-left">
+              <div className="building-roof" />
+              <div className="building-body small">
+                <div className="win-row">
+                  {[0,1,2].map(i => <div key={i} className={`window win-${i%3}`} />)}
+                </div>
+                <div className="win-row">
+                  {[0,1,2].map(i => <div key={i} className={`window win-${(i+2)%3}`} />)}
+                </div>
+              </div>
+            </div>
+
+            {/* Right wing */}
+            <div className="building wing-right">
+              <div className="building-roof" />
+              <div className="building-body small">
+                <div className="win-row">
+                  {[0,1,2].map(i => <div key={i} className={`window win-${(i+1)%3}`} />)}
+                </div>
+                <div className="win-row">
+                  {[0,1,2].map(i => <div key={i} className={`window win-${i%3}`} />)}
+                </div>
+              </div>
+            </div>
+
+            {/* Trees */}
+            <div className="tree tree-1"><div className="tree-top" /><div className="tree-trunk" /></div>
+            <div className="tree tree-2"><div className="tree-top" /><div className="tree-trunk" /></div>
+            <div className="tree tree-3"><div className="tree-top" /><div className="tree-trunk" /></div>
+            <div className="tree tree-4"><div className="tree-top" /><div className="tree-trunk" /></div>
+
+            {/* Road / path */}
+            <div className="campus-road">
+              <div className="road-mark" /><div className="road-mark" /><div className="road-mark" />
+            </div>
+          </div>
+
+          {/* Location pin */}
+          <div className="scene-pin">
+            <div className="scene-pin-dot" />
+            <div className="scene-pin-ring r1" />
+            <div className="scene-pin-ring r2" />
+            <div className="scene-pin-ring r3" />
+          </div>
+        </div>
+
+        {/* Map header */}
         <div className="campus-map-header">
           <div className="campus-map-info">
             <span className="campus-map-name">
@@ -75,17 +170,12 @@ export default function Assist({ goHome }) {
               103/G2, Bypass Road, Vannarpettai, Tirunelveli – 627 003, Tamil Nadu
             </span>
           </div>
-          <a
-            href={MAP_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="campus-map-open-btn"
-          >
+          <a href={MAP_LINK} target="_blank" rel="noopener noreferrer" className="campus-map-open-btn">
             Open Map ↗
           </a>
         </div>
 
-        {/* Iframe + radar overlay */}
+        {/* Iframe */}
         <div className="campus-map-iframe-wrap">
           <iframe
             id="campus-map-iframe"
@@ -95,11 +185,8 @@ export default function Assist({ goHome }) {
             loading="lazy"
             allowFullScreen
           />
-          {/* Radar pulse on the pin */}
           <div className="map-radar">
-            <div className="map-radar-ring" />
-            <div className="map-radar-ring" />
-            <div className="map-radar-ring" />
+            <div className="map-radar-ring" /><div className="map-radar-ring" /><div className="map-radar-ring" />
             <div className="map-radar-pin">📍</div>
           </div>
         </div>
