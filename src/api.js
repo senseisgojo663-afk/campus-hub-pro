@@ -12,6 +12,7 @@ export const updatePulseStatus = (id, status) => api.patch(`/pulse/${id}`, { sta
 export const fetchPosts = () => api.get('/posts');
 export const createPost = (postData) => api.post('/posts', postData);
 export const deletePost = (id) => api.delete(`/posts/${id}`);
+export const offerHelp = (id, helperName) => api.post(`/posts/${id}/help`, { helperName });
 
 export const fetchPrinters = () => api.get('/printers');
 export const updatePrinterStatus = (id, status, queue) => api.patch(`/printers/${id}`, { status, queue });

@@ -15,8 +15,8 @@ const server = http.createServer(app);
 
 // Enable CORS
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173', // Vite default port
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: process.env.CLIENT_URL || '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true
 }));
 
@@ -34,24 +34,23 @@ app.get('/', (req, res) => {
 
 // Setup Socket.io
 const io = new Server(server, {
-    cors: {
-        origin: process.env.CLIENT_URL || 'http://localhost:5173',
-        methods: ['GET', 'POST']
-    }
+    cors: { origin: '*', methods: ['GET', 'POST'] }
 });
+
+// Make io accessible in routes
+app.set('io', io);
 
 io.on('connection', (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
-    // Pulse Dashboard real-time events
-    socket.on('join_pulse', () => {
-        socket.join('pulse_room');
-        console.log(`User ${socket.id} joined pulse_room`);
+    // Each user joins their own private session room for notifications
+    socket.on('join_session', (sessionId) => {
+        socket.join(`session:${sessionId}`);
+        console.log(`Socket ${socket.id} joined session:${sessionId}`);
     });
 
-    socket.on('leave_pulse', () => {
-        socket.leave('pulse_room');
-        console.log(`User ${socket.id} left pulse_room`);
+    socket.on('join_pulse', () => {
+        socket.join('pulse_room');
     });
 
     socket.on('disconnect', () => {

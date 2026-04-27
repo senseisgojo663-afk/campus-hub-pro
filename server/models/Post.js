@@ -17,6 +17,10 @@ const postSchema = new mongoose.Schema({
     body: {
         type: String,
         required: true
+    },
+    sessionId: {
+        type: String,
+        default: ''
     }
 }, { timestamps: true });
 
