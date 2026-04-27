@@ -66,6 +66,76 @@
   box-shadow: 0 0 12px rgba(6,182,212,0.2);
 }
 
+/* ── AVAILABLE BADGE ────────────────────────────── */
+.available-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #34d399; padding: 7px 16px;
+  border-radius: 100px; font-size: 0.85rem;
+  font-weight: 600; margin-bottom: 32px;
+}
+
+/* ── CAMPUS MAP ─────────────────────────────────── */
+.campus-map-wrapper {
+  border-radius: var(--r-xl); overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--card);
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+}
+
+.campus-map-header {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+}
+
+.campus-map-info {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 0;
+}
+
+.campus-map-name {
+  font-size: 0.9rem; font-weight: 700; color: var(--text);
+}
+
+.campus-map-address {
+  font-size: 0.75rem; color: var(--text3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.campus-map-open-btn {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.75rem; font-weight: 700;
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.3);
+  color: var(--purple); padding: 5px 12px;
+  border-radius: 100px; cursor: pointer;
+  text-decoration: none; transition: all 0.2s;
+}
+
+.campus-map-open-btn:hover {
+  background: rgba(139,92,246,0.2);
+  box-shadow: 0 0 12px rgba(139,92,246,0.2);
+}
+
+.campus-map-iframe {
+  width: 100%; height: 320px;
+  border: none; display: block;
+  filter: brightness(0.9) saturate(0.85);
+}
+
+.campus-map-footer {
+  padding: 8px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem; color: var(--text3);
+  background: rgba(255,255,255,0.02);
+}
+
 /* ── HELP NOTIFICATION POPUP ───────────────────── */
 .help-notification {
   position: fixed; bottom: 80px; left: 50%;
