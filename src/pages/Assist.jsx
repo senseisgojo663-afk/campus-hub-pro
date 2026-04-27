@@ -185,9 +185,20 @@ export default function Assist({ goHome }) {
             loading="lazy"
             allowFullScreen
           />
-          <div className="map-radar">
-            <div className="map-radar-ring" /><div className="map-radar-ring" /><div className="map-radar-ring" />
-            <div className="map-radar-pin">📍</div>
+
+          {/* Animated overlay — centered exactly where the OSM pin sits */}
+          <div className="map-pin-overlay">
+            {/* Expanding sonar rings */}
+            <div className="sonar-ring sr1" />
+            <div className="sonar-ring sr2" />
+            <div className="sonar-ring sr3" />
+            <div className="sonar-ring sr4" />
+            {/* Glowing dot */}
+            <div className="sonar-dot" />
+            {/* Floating label */}
+            <div className="pin-label">
+              🏛️ FXEC
+            </div>
           </div>
         </div>
 

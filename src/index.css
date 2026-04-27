@@ -443,7 +443,7 @@
   box-shadow: 0 0 12px rgba(139,92,246,0.2);
 }
 
-/* Map iframe container with radar overlay */
+/* Map iframe container with pin overlay */
 .campus-map-iframe-wrap {
   position: relative; overflow: hidden;
 }
@@ -452,43 +452,91 @@
   width: 100%; height: 320px;
   border: none; display: block;
   filter: brightness(0.88) saturate(0.8) hue-rotate(5deg);
+  pointer-events: none; /* let the overlay be on top without blocking interaction */
 }
 
-/* Radar / sonar pulse overlay — appears over top-right of map */
-.map-radar {
-  position: absolute; top: 16px; right: 16px;
-  width: 56px; height: 56px;
-  pointer-events: none; z-index: 2;
+/* Centered overlay — sits exactly where OSM places the marker (center of iframe, slightly above midpoint) */
+.map-pin-overlay {
+  position: absolute;
+  /* OSM always places the pinned marker at the center-horizontal, ~45% from top */
+  left: 50%;
+  top: 43%;
+  transform: translate(-50%, -50%);
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 5;
 }
 
-.map-radar-pin {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; z-index: 3;
-  filter: drop-shadow(0 0 6px rgba(239,68,68,0.8));
-  animation: pinBounce 2s ease-in-out infinite;
+/* Expanding sonar rings */
+.sonar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(139, 92, 246, 0.7);
+  transform: translate(-50%, -50%);
+  animation: sonarExpand 2.8s ease-out infinite;
 }
 
-@keyframes pinBounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-5px); }
+.sr1 { animation-delay: 0s;    border-color: rgba(139,92,246,0.75); }
+.sr2 { animation-delay: 0.6s;  border-color: rgba(59,130,246,0.6); }
+.sr3 { animation-delay: 1.2s;  border-color: rgba(6,182,212,0.5); }
+.sr4 { animation-delay: 1.8s;  border-color: rgba(16,185,129,0.4); }
+
+@keyframes sonarExpand {
+  0%   { width: 8px;  height: 8px;  opacity: 1; }
+  100% { width: 120px; height: 120px; opacity: 0; }
 }
 
-.map-radar-ring {
-  position: absolute; border-radius: 50%;
-  border: 2px solid rgba(139,92,246,0.6);
-  animation: radarRing 2s ease-out infinite;
+/* Glowing center dot */
+.sonar-dot {
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, var(--purple) 60%, transparent 100%);
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 8px rgba(139,92,246,0.9),
+    0 0 20px rgba(139,92,246,0.5),
+    0 0 40px rgba(139,92,246,0.2);
+  animation: dotPulse 2.8s ease-in-out infinite;
+  z-index: 6;
 }
 
-.map-radar-ring:nth-child(2) { animation-delay: 0.6s; }
-.map-radar-ring:nth-child(3) { animation-delay: 1.2s; }
-
-@keyframes radarRing {
-  0%   { inset: 50%; opacity: 0.8; border-color: rgba(139,92,246,0.7); }
-  100% { inset: -40px; opacity: 0; border-color: rgba(6,182,212,0); }
+@keyframes dotPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1);    box-shadow: 0 0 8px rgba(139,92,246,0.9), 0 0 20px rgba(139,92,246,0.5); }
+  50%      { transform: translate(-50%,-50%) scale(1.25); box-shadow: 0 0 14px rgba(139,92,246,1),   0 0 36px rgba(139,92,246,0.7); }
 }
 
-/* Gradient overlay at the bottom of the map */
+/* Floating FXEC label above the dot */
+.pin-label {
+  position: absolute;
+  left: 50%; top: -38px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: rgba(10,15,30,0.92);
+  border: 1px solid rgba(139,92,246,0.5);
+  color: #fff; font-size: 0.7rem;
+  font-weight: 800; letter-spacing: 0.5px;
+  padding: 3px 10px; border-radius: 100px;
+  box-shadow: 0 0 12px rgba(139,92,246,0.3);
+  animation: labelFloat 3s ease-in-out infinite;
+}
+
+/* Small stem below the label connecting to the dot */
+.pin-label::after {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 50%;
+  transform: translateX(-50%);
+  width: 2px; height: 8px;
+  background: linear-gradient(to bottom, rgba(139,92,246,0.8), transparent);
+}
+
+@keyframes labelFloat {
+  0%,100% { transform: translateX(-50%) translateY(0px); }
+  50%      { transform: translateX(-50%) translateY(-4px); }
+}
+
+/* Bottom gradient overlay */
 .campus-map-iframe-wrap::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0; height: 50px;
