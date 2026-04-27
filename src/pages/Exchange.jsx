@@ -207,23 +207,30 @@ export default function Exchange({ goHome }) {
       {/* Standard toast */}
       {toast && <div className="toast" role="alert">{toast}</div>}
 
-      {/* Real-time help notification popup */}
+      {/* OS-style help notification */}
       {notification && (
-        <div className="help-notification" role="alert">
-          <div className="help-notif-icon">🤝</div>
-          <div className="help-notif-content">
-            <div className="help-notif-title">Someone wants to help!</div>
-            <div className="help-notif-body">
-              <strong>{notification.helperName}</strong> offered help for your{" "}
-              <em>{notification.category}</em> request.
+        <div className="notif-stack">
+          <div className="os-notif" role="alert">
+            <div className="os-notif-icon purple">🤝</div>
+            <div className="os-notif-body">
+              <div className="os-notif-header">
+                <span className="os-notif-app">CampusHub · Exchange</span>
+                <span className="os-notif-time">now</span>
+              </div>
+              <div className="os-notif-title">
+                {notification.helperName} can help you!
+              </div>
+              <div className="os-notif-msg">
+                Your {notification.category} request: "{notification.postBody}"
+              </div>
             </div>
-            <div className="help-notif-snippet">"{notification.postBody}"</div>
+            <button
+              className="os-notif-close"
+              onClick={() => setNotification(null)}
+              aria-label="Dismiss"
+            >✕</button>
+            <div className="os-notif-progress purple" />
           </div>
-          <button
-            className="help-notif-close"
-            onClick={() => setNotification(null)}
-            aria-label="Dismiss"
-          >✕</button>
         </div>
       )}
     </section>

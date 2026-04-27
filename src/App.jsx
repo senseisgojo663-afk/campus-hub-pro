@@ -63,31 +63,33 @@ export default function App() {
       <Navbar currentPage={page} setPage={setPage} />
       <main>{renderPage()}</main>
 
-      {/* Global broadcast notification — shown on ALL pages */}
-      {broadcastNotif && (
-        <div className="broadcast-notification" role="alert">
-          <div className="broadcast-icon">📢</div>
-          <div className="broadcast-content">
-            <div className="broadcast-title">New Request Posted!</div>
-            <div className="broadcast-author">
-              <strong>{broadcastNotif.author}</strong> needs help with{" "}
-              <span className="broadcast-category">{broadcastNotif.category}</span>
+      {/* OS-style notification stack */}
+      <div className="notif-stack">
+        {broadcastNotif && (
+          <div
+            className="os-notif"
+            role="alert"
+            onClick={() => { setPage("exchange"); setBroadcastNotif(null); }}
+          >
+            <div className="os-notif-icon cyan">📢</div>
+            <div className="os-notif-body">
+              <div className="os-notif-header">
+                <span className="os-notif-app">CampusHub · Exchange</span>
+                <span className="os-notif-time">now</span>
+              </div>
+              <div className="os-notif-title">
+                {broadcastNotif.author} needs {broadcastNotif.category} help
+              </div>
+              <div className="os-notif-msg">"{broadcastNotif.body}"</div>
             </div>
-            <div className="broadcast-body">"{broadcastNotif.body}"</div>
-            <button
-              className="broadcast-action"
-              onClick={() => { setPage("exchange"); setBroadcastNotif(null); }}
-            >
-              View Request →
+            <button className="os-notif-action" onClick={(e) => { e.stopPropagation(); setPage("exchange"); setBroadcastNotif(null); }}>
+              View
             </button>
+            <button className="os-notif-close" onClick={(e) => { e.stopPropagation(); setBroadcastNotif(null); }} aria-label="Dismiss">✕</button>
+            <div className="os-notif-progress cyan" />
           </div>
-          <button
-            className="help-notif-close"
-            onClick={() => setBroadcastNotif(null)}
-            aria-label="Dismiss"
-          >✕</button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

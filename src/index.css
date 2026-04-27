@@ -1,70 +1,134 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-/* ── BROADCAST NOTIFICATION ────────────────────── */
-.broadcast-notification {
-  position: fixed; top: 72px; right: 20px;
-  width: min(360px, calc(100vw - 32px));
-  background: rgba(13, 17, 30, 0.97);
-  border: 1px solid rgba(6, 182, 212, 0.45);
-  border-radius: 18px; padding: 18px;
-  display: flex; align-items: flex-start; gap: 12px;
-  z-index: 1000;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 32px rgba(6,182,212,0.15);
-  backdrop-filter: blur(24px);
-  animation: broadcastSlide 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+/* ── OS-STYLE NOTIFICATION BANNERS ─────────────── */
+
+/* Container: stacks notifications from top-center */
+.notif-stack {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px;
+  align-items: center;
+  pointer-events: none;
+  width: min(400px, calc(100vw - 24px));
 }
 
-@keyframes broadcastSlide {
-  from { opacity: 0; transform: translateX(40px) scale(0.92); }
-  to   { opacity: 1; transform: translateX(0) scale(1); }
+/* Each banner */
+.os-notif {
+  pointer-events: all;
+  width: 100%;
+  background: rgba(22, 27, 46, 0.92);
+  backdrop-filter: blur(32px) saturate(1.8);
+  -webkit-backdrop-filter: blur(32px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.3),
+    0 20px 40px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: osNotifDrop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
-.broadcast-icon {
-  font-size: 1.6rem; flex-shrink: 0;
-  background: rgba(6,182,212,0.12);
-  border: 1px solid rgba(6,182,212,0.3);
-  width: 44px; height: 44px; border-radius: 12px;
+.os-notif:hover { transform: scale(1.02); }
+
+@keyframes osNotifDrop {
+  from { opacity: 0; transform: translateY(-28px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0)      scale(1); }
+}
+
+/* App icon */
+.os-notif-icon {
+  flex-shrink: 0;
+  width: 42px; height: 42px;
+  border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
 }
 
-.broadcast-content { flex: 1; min-width: 0; }
+.os-notif-icon.cyan  { background: rgba(6,182,212,0.18);  border: 1px solid rgba(6,182,212,0.3); }
+.os-notif-icon.purple{ background: rgba(139,92,246,0.18); border: 1px solid rgba(139,92,246,0.3); }
 
-.broadcast-title {
-  font-weight: 800; font-size: 0.85rem;
-  background: linear-gradient(135deg, #fff, var(--cyan));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; margin-bottom: 4px;
+/* Text area */
+.os-notif-body { flex: 1; min-width: 0; }
+
+.os-notif-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2px;
 }
 
-.broadcast-author { font-size: 0.8rem; color: var(--text2); margin-bottom: 4px; }
-
-.broadcast-category {
-  display: inline-block; font-size: 0.68rem; font-weight: 700;
-  padding: 1px 8px; border-radius: 100px;
-  background: rgba(6,182,212,0.12); color: var(--cyan);
-  border: 1px solid rgba(6,182,212,0.25);
-  text-transform: uppercase; letter-spacing: 0.5px;
+.os-notif-app {
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
 }
 
-.broadcast-body {
-  font-size: 0.78rem; color: var(--text3);
-  font-style: italic; margin-bottom: 10px;
+.os-notif-time {
+  font-size: 0.62rem; color: rgba(255,255,255,0.3);
+}
+
+.os-notif-title {
+  font-size: 0.82rem; font-weight: 700;
+  color: #fff; line-height: 1.3; margin-bottom: 1px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-.broadcast-action {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 0.78rem; font-weight: 700;
-  background: rgba(6,182,212,0.12);
-  border: 1px solid rgba(6,182,212,0.3);
-  color: var(--cyan); padding: 5px 12px;
-  border-radius: 100px; cursor: pointer; transition: all 0.2s;
+.os-notif-msg {
+  font-size: 0.73rem; color: rgba(255,255,255,0.5);
+  line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-.broadcast-action:hover {
-  background: rgba(6,182,212,0.2);
-  box-shadow: 0 0 12px rgba(6,182,212,0.2);
+/* Progress bar at the bottom showing auto-dismiss timer */
+.os-notif-progress {
+  position: absolute; bottom: 0; left: 0;
+  height: 2px; border-radius: 0 0 18px 18px;
+  animation: notifProgress linear forwards;
 }
+
+.os-notif { position: relative; overflow: hidden; }
+
+.os-notif-progress.cyan   { background: var(--cyan);   animation-duration: 6s; }
+.os-notif-progress.purple { background: var(--purple); animation-duration: 7s; }
+
+@keyframes notifProgress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* Action button inside notification */
+.os-notif-action {
+  flex-shrink: 0;
+  font-size: 0.7rem; font-weight: 700;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  padding: 5px 12px; border-radius: 100px;
+  cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.os-notif-action:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+/* Close X */
+.os-notif-close {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.06);
+  border: none; color: rgba(255,255,255,0.3);
+  width: 22px; height: 22px; border-radius: 50%;
+  cursor: pointer; font-size: 0.65rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.os-notif-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
 
 /* ── AVAILABLE BADGE ────────────────────────────── */
 .available-badge {
