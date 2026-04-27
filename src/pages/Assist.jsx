@@ -64,7 +64,13 @@ export default function Assist({ goHome }) {
       <div className="campus-map-wrapper">
         <div className="campus-map-header">
           <div className="campus-map-info">
-            <span className="campus-map-name">🏛️ Francis Xavier Engineering College</span>
+            <span className="campus-map-name">
+              🏛️ Francis Xavier Engineering College
+              <span className="map-live-badge">
+                <span className="map-live-dot" />
+                Live
+              </span>
+            </span>
             <span className="campus-map-address">
               103/G2, Bypass Road, Vannarpettai, Tirunelveli – 627 003, Tamil Nadu
             </span>
@@ -74,21 +80,32 @@ export default function Assist({ goHome }) {
             target="_blank"
             rel="noopener noreferrer"
             className="campus-map-open-btn"
-            aria-label="Open in OpenStreetMap"
           >
             Open Map ↗
           </a>
         </div>
-        <iframe
-          id="campus-map-iframe"
-          title="Francis Xavier Engineering College Campus Map"
-          src={MAP_EMBED_URL}
-          className="campus-map-iframe"
-          loading="lazy"
-          allowFullScreen
-        />
+
+        {/* Iframe + radar overlay */}
+        <div className="campus-map-iframe-wrap">
+          <iframe
+            id="campus-map-iframe"
+            title="Francis Xavier Engineering College Campus Map"
+            src={MAP_EMBED_URL}
+            className="campus-map-iframe"
+            loading="lazy"
+            allowFullScreen
+          />
+          {/* Radar pulse on the pin */}
+          <div className="map-radar">
+            <div className="map-radar-ring" />
+            <div className="map-radar-ring" />
+            <div className="map-radar-ring" />
+            <div className="map-radar-pin">📍</div>
+          </div>
+        </div>
+
         <div className="campus-map-footer">
-          <span>📍 Powered by OpenStreetMap</span>
+          <span>📍 Powered by OpenStreetMap · Francis Xavier Engineering College</span>
         </div>
       </div>
 
