@@ -17,4 +17,8 @@ export const offerHelp = (id, helperName) => api.post(`/posts/${id}/help`, { hel
 export const fetchPrinters = () => api.get('/printers');
 export const updatePrinterStatus = (id, status, queue) => api.patch(`/printers/${id}`, { status, queue });
 
+// Missed-notification fallback (for when mobile was backgrounded)
+export const fetchMissedNotifications = (sessionId) => api.get(`/posts/notifications/${sessionId}`);
+export const markNotificationsRead = (sessionId) => api.patch(`/posts/notifications/${sessionId}/read`);
+
 export default api;

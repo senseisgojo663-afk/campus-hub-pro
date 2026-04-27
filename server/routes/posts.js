@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 
 // Get all posts
 router.get('/', async (req, res) => {
@@ -46,13 +47,26 @@ router.post('/:id/help', async (req, res) => {
         const post = await Post.findById(req.params.id);
         if (!post) return res.status(404).json({ message: 'Post not found' });
 
+        const helperName = req.body.helperName || 'Someone';
+        const notifPayload = {
+            postBody: post.body,
+            helperName,
+            category: post.category
+        };
+
         const io = req.app.get('io');
 
-        // Emit notification to the room of the original poster's sessionId
+        // 1. Try to deliver live via Socket.io
         if (post.sessionId) {
-            io.to(`session:${post.sessionId}`).emit('help_notification', {
+            io.to(`session:${post.sessionId}`).emit('help_notification', notifPayload);
+        }
+
+        // 2. Also persist to DB so mobile can fetch it on reconnect
+        if (post.sessionId) {
+            await Notification.create({
+                sessionId: post.sessionId,
+                helperName,
                 postBody: post.body,
-                helperName: req.body.helperName || 'Someone',
                 category: post.category
             });
         }
@@ -70,6 +84,32 @@ router.delete('/:id', async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id);
         res.json({ message: 'Post deleted' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Fetch unread notifications for a sessionId (mobile reconnect fallback)
+router.get('/notifications/:sessionId', async (req, res) => {
+    try {
+        const notifs = await Notification.find({
+            sessionId: req.params.sessionId,
+            read: false
+        }).sort({ createdAt: -1 });
+        res.json(notifs);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Mark notifications as read
+router.patch('/notifications/:sessionId/read', async (req, res) => {
+    try {
+        await Notification.updateMany(
+            { sessionId: req.params.sessionId, read: false },
+            { read: true }
+        );
+        res.json({ message: 'Notifications marked as read' });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

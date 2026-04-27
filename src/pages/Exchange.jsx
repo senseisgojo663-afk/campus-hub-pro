@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { io } from "socket.io-client";
 import Card from "../components/Card";
-import { fetchPosts, createPost, offerHelp } from "../api";
+import { fetchPosts, createPost, offerHelp, fetchMissedNotifications, markNotificationsRead } from "../api";
 
 const CATEGORIES = ["Books", "Notes", "Equipment", "Food", "Other"];
 const SERVER_URL = import.meta.env.VITE_API_URL
@@ -37,19 +37,35 @@ export default function Exchange({ goHome }) {
 
   // Connect Socket.io and join session room
   useEffect(() => {
+    // Check for missed notifications (mobile was backgrounded when help was offered)
+    fetchMissedNotifications(sessionId)
+      .then((res) => {
+        if (res.data && res.data.length > 0) {
+          const latest = res.data[0];
+          setNotification({
+            helperName: latest.helperName,
+            postBody: latest.postBody,
+            category: latest.category,
+            missed: true
+          });
+          markNotificationsRead(sessionId).catch(() => {});
+        }
+      })
+      .catch(() => {});
+
     const socket = io(SERVER_URL, { transports: ["websocket", "polling"] });
     socketRef.current = socket;
     socket.emit("join_session", sessionId);
 
-    // Listen for help notifications meant for this user
+    // Show in-app banner for live help notifications
     socket.on("help_notification", (data) => {
       setNotification(data);
-      // Auto-dismiss after 7 seconds
       setTimeout(() => setNotification(null), 7000);
     });
 
     return () => socket.disconnect();
   }, [sessionId]);
+
 
   useEffect(() => {
     loadPosts();
@@ -215,7 +231,9 @@ export default function Exchange({ goHome }) {
             <div className="os-notif-body">
               <div className="os-notif-header">
                 <span className="os-notif-app">CampusHub · Exchange</span>
-                <span className="os-notif-time">now</span>
+                <span className="os-notif-time">
+                  {notification.missed ? "Missed notification" : "now"}
+                </span>
               </div>
               <div className="os-notif-title">
                 {notification.helperName} can help you!
@@ -233,6 +251,7 @@ export default function Exchange({ goHome }) {
           </div>
         </div>
       )}
+
     </section>
   );
 }
