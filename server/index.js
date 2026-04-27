@@ -43,6 +43,9 @@ app.set('io', io);
 io.on('connection', (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
+    // Every user automatically joins the global broadcast room
+    socket.join('global_room');
+
     // Each user joins their own private session room for notifications
     socket.on('join_session', (sessionId) => {
         socket.join(`session:${sessionId}`);

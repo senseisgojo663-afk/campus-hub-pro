@@ -24,6 +24,16 @@ router.post('/', async (req, res) => {
 
     try {
         const newPost = await post.save();
+
+        // Broadcast to ALL connected users in the global room
+        const io = req.app.get('io');
+        io.to('global_room').emit('new_post_notification', {
+            author: newPost.author,
+            category: newPost.category,
+            body: newPost.body,
+            posterSessionId: newPost.sessionId
+        });
+
         res.status(201).json(newPost);
     } catch (err) {
         res.status(400).json({ message: err.message });
