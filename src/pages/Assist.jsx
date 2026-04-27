@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Card from "../components/Card";
 import { fetchPrinters } from "../api";
+import CampusMap from "../components/CampusMap";
 
 // Francis Xavier Engineering College coordinates
 const COLLEGE_LAT = 8.7379;
@@ -175,31 +176,9 @@ export default function Assist({ goHome }) {
           </a>
         </div>
 
-        {/* Iframe */}
+        {/* Leaflet Map */}
         <div className="campus-map-iframe-wrap">
-          <iframe
-            id="campus-map-iframe"
-            title="Francis Xavier Engineering College Campus Map"
-            src={MAP_EMBED_URL}
-            className="campus-map-iframe"
-            loading="lazy"
-            allowFullScreen
-          />
-
-          {/* Animated overlay — centered exactly where the OSM pin sits */}
-          <div className="map-pin-overlay">
-            {/* Expanding sonar rings */}
-            <div className="sonar-ring sr1" />
-            <div className="sonar-ring sr2" />
-            <div className="sonar-ring sr3" />
-            <div className="sonar-ring sr4" />
-            {/* Glowing dot */}
-            <div className="sonar-dot" />
-            {/* Floating label */}
-            <div className="pin-label">
-              🏛️ FXEC
-            </div>
-          </div>
+          <CampusMap />
         </div>
 
         <div className="campus-map-footer">
