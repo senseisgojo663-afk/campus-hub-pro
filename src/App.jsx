@@ -83,8 +83,8 @@ export default function App() {
     socket.on("help_notification", (data) => {
       // This fires when someone clicks "I can help!" on your post
       showPushNotification(
-        "CampusHub · Someone can help you! 🤝",
-        `${data.helperName} can help with your ${data.category} request`
+        `CampusHub · ${data.helperName} can help you! 🤝`,
+        `${data.helperName} can help with your ${data.category} request: "${data.postBody}"`
       );
     });
 

@@ -110,10 +110,13 @@ export default function Exchange({ goHome }) {
 
   const handleHelp = async (post) => {
     try {
-      const helperName = name.trim() || "Someone";
+      // Ask the helper for their name so the poster knows who is offering help
+      const inputName = window.prompt("What's your name? (so the poster knows who is helping)", name.trim() || "");
+      if (inputName === null) return; // User cancelled
+      const helperName = inputName.trim() || "A fellow student";
       await offerHelp(post._id, helperName);
       setPosts((prev) => prev.filter((p) => p._id !== post._id));
-      showToast("🤝 Help offered! The poster has been notified.");
+      showToast(`🤝 Help offered! The poster has been notified that ${helperName} can help.`);
     } catch (err) {
       console.error("Failed to offer help", err);
     }
